@@ -5,6 +5,7 @@ import Box from './Box';
 import JurisdictionBar from './JurisdictionBar';
 import {useQueryClient} from '@tanstack/react-query';
 import {Spinner} from './Icons';
+import ErrorBox from './ErrorBox';
 
 const JurisdictionSelector = (props: ComponentProps<'div'>) => {
   const queryClient = useQueryClient();
@@ -52,14 +53,19 @@ const JurisdictionSelector = (props: ComponentProps<'div'>) => {
     <Box {...props}>
       <div className="min-w-[40rem] max-h-[60rem] overflow-y-auto px-4 py-2">
         {jurisdictionsQuery.isSuccess &&
-          jurisdictionsQuery.data.map(jurisdiction => (
-            <JurisdictionBar
-              key={`jurisdiction-${jurisdiction.id}`}
-              jurisdiction={jurisdiction}
-              selectedIds={selectedIds}
-              onChange={handleCheckChange}
-            />
+          (jurisdictionsQuery.data.length > 0 ? (
+            jurisdictionsQuery.data.map(jurisdiction => (
+              <JurisdictionBar
+                key={`jurisdiction-${jurisdiction.id}`}
+                jurisdiction={jurisdiction}
+                selectedIds={selectedIds}
+                onChange={handleCheckChange}
+              />
+            ))
+          ) : (
+            <div>No jurisdiction found</div>
           ))}
+        {jurisdictionsQuery.isError && <ErrorBox>Error loading data</ErrorBox>}
         {jurisdictionsQuery.isLoading && (
           <div className="flex flex-row gap-x-4">
             <div>Loading...</div>

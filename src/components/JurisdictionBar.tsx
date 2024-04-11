@@ -3,6 +3,7 @@ import {useSubJurisdictionsQuery} from 'content/hooks';
 import {Jurisdiction} from 'content/schemas';
 import {ComponentProps, useCallback} from 'react';
 import {Spinner} from './Icons';
+import ErrorBox from './ErrorBox';
 
 type Props = Omit<ComponentProps<'div'>, 'onChange'> & {
   selectedIds: Jurisdiction['id'][];
@@ -28,32 +29,25 @@ const JurisdictionBar = ({className, selectedIds, jurisdiction, onChange, ...pro
         </div>
         {subJurisdictionsQuery.isLoading && <Spinner />}
       </div>
-      {selected &&
-        !subJurisdictionsQuery.isLoading &&
-        (subJurisdictionsQuery.isSuccess ? (
-          subJurisdictionsQuery.data.length > 0 && (
-            <div className="flex flex-row w-full">
-              <div className="w-0.5 ms-[1.1rem] rounded-full bg-slate-300" />
-              <div className="w-full pe-4">
-                {subJurisdictionsQuery.data.map(jurisdiction => (
-                  <div className="relative" key={`jurisdiction-${jurisdiction.id}`}>
-                    <div className="absolute top-5 w-2 h-0.5 bg-slate-300" />
-                    <JurisdictionBar
-                      className="ms-2"
-                      jurisdiction={jurisdiction}
-                      selectedIds={selectedIds}
-                      onChange={onChange}
-                    />
-                  </div>
-                ))}
+      {selected && subJurisdictionsQuery.isSuccess && subJurisdictionsQuery.data.length > 0 && (
+        <div className="flex flex-row w-full">
+          <div className="w-0.5 ms-[1.1rem] rounded-full bg-slate-300" />
+          <div className="w-full pe-4">
+            {subJurisdictionsQuery.data.map(jurisdiction => (
+              <div className="relative" key={`jurisdiction-${jurisdiction.id}`}>
+                <div className="absolute top-5 w-2 h-0.5 bg-slate-300" />
+                <JurisdictionBar
+                  className="ms-2"
+                  jurisdiction={jurisdiction}
+                  selectedIds={selectedIds}
+                  onChange={onChange}
+                />
               </div>
-            </div>
-          )
-        ) : (
-          <div className="ms-4 px-4 py-2 bg-red-200/75 rounded-lg">
-            <div>Error loading data</div>
+            ))}
           </div>
-        ))}
+        </div>
+      )}
+      {selected && subJurisdictionsQuery.isError && <ErrorBox className="ms-4">Error loading data</ErrorBox>}
     </div>
   );
 };
