@@ -13,8 +13,11 @@
     "check-all": "npm run check-eslint && npm run check-prettier && tsc"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.29.0",
+    "classnames": "^2.5.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.2",
